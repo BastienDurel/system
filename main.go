@@ -5,6 +5,7 @@ import "github.com/statsd/system/pkg/memory"
 import "github.com/statsd/client-namespace"
 import "github.com/statsd/system/pkg/disk"
 import "github.com/statsd/system/pkg/cpu"
+import "github.com/statsd/system/pkg/load"
 import . "github.com/tj/go-gracefully"
 import "github.com/segmentio/go-log"
 import "github.com/statsd/client"
@@ -12,7 +13,7 @@ import "github.com/tj/docopt"
 import "time"
 import "os"
 
-const Version = "0.2.0"
+const Version = "0.2.1"
 
 const Usage = `
   Usage:
@@ -21,6 +22,7 @@ const Usage = `
       [--memory-interval i]
       [--disk-interval i]
       [--cpu-interval i]
+      [--load-interval i]
       [--extended]
       [--name name]
     system-stats -h | --help
@@ -31,6 +33,7 @@ const Usage = `
     --memory-interval i     memory reporting interval [default: 10s]
     --disk-interval i       disk reporting interval [default: 30s]
     --cpu-interval i        cpu reporting interval [default: 5s]
+    --load-interval i       load reporting interval [default: 10s]
     --extended              output additional extended metrics
     --name name             node name defaulting to hostname [default: hostname]
     -h, --help              output help information
@@ -59,6 +62,7 @@ func main() {
 	c.Add(memory.New(interval(args, "--memory-interval"), extended))
 	c.Add(cpu.New(interval(args, "--cpu-interval"), extended))
 	c.Add(disk.New(interval(args, "--disk-interval")))
+	c.Add(load.New(interval(args, "--load-interval")))
 
 	c.Start()
 	Shutdown()
