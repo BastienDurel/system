@@ -51,7 +51,9 @@ func (d *Disk) paths() ([]string, error) {
 
 	paths := []string{}
 	for _, mount := range mounts {
-		paths = append(paths, mount.File)
+		if mount.File != "none" {
+			paths = append(paths, mount.File)
+		}
 	}
 
 	return paths, nil
